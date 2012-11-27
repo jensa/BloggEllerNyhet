@@ -7,7 +7,7 @@
   <path id="classpath">
     <pathelement path="${java.class.path}"/>
     <pathelement path="${classes.dir}"/>
-    <pathelement location="lib/jsoup-1.7.1.jar"/>
+    <pathelement location="libs/jsoup-1.7.1.jar"/>
   </path>
 	
 	<target name="run" depends="compile">
