@@ -1,0 +1,1 @@
+wordpress,http://kenzas.se/author/kenza/feed/?paged=%page
