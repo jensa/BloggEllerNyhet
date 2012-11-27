@@ -1,0 +1,39 @@
+<project name="BloggEllerNyhet" default="compile" basedir=".">
+	<property name="main-class"  value="Crawler" />
+
+  <property name="src.dir" location="src"/>
+  <property name="classes.dir" location="bin"/>
+
+  <path id="classpath">
+    <pathelement path="${java.class.path}"/>
+    <pathelement path="${classes.dir}"/>
+    <pathelement location="lib/jsoup-1.7.1.jar"/>
+  </path>
+	
+	<target name="run" depends="compile">
+    <java classname="${main-class}" classpathref="classpath" />
+	</target>
+
+  <target name="compile" depends="init" description="compile the source">
+      <javac srcdir="${src.dir}" destdir="${classes.dir}"
+        classpathref="classpath" encoding="utf8" includeantruntime="false">
+			<compilerarg value="-Xlint"/>
+			<classpath location="${classes.dir}" path="${java.class.path}" />
+		</javac>
+  </target>
+
+  <target name="init" description="initialize build">
+    <tstamp/>
+    <mkdir dir="${classes.dir}"/>
+  </target>
+
+  <target name="clean" depends="init" description="clean up">
+		<delete>
+			<fileset dir="${classes.dir}" includes="*.class"/>
+		</delete>
+  </target>
+
+	<target name="recompile" depends="clean, compile" description="clean up and compile" />
+</project>
+
+
