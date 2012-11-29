@@ -5,6 +5,10 @@ import java.io.IOException;
 
 public class Crawler {
   public static final String OUTPUT_DIR = "data";
+  
+  public static final String TEST_OUTPUT = Classifier.test;
+  public static final String TRAIN_OUTPUT = Classifier.train;
+  
   public static final int NUM_PAGES = 10;
 
   public static void main (String [] args) {

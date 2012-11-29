@@ -13,8 +13,8 @@ public class Classifier {
 	
 	public static final String sep = System.getProperty ("File.separator");
 	
-	public static final String test = "test";
-	public static final String train = "train";
+	public static final String test = "data"+sep+"test";
+	public static final String train = "data"+sep+"train";
 	
 	private static int BLOG = 0;
 	private static int NEWS = 1;
