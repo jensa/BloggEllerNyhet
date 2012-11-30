@@ -1,1 +1,5 @@
-wordpress,http://kenzas.se/author/kenza/feed/?paged=%page
+kenza,blogg,http://kenzas.se/author/kenza/feed/?paged=%page
+aftonbladet,nyhet,http://www.aftonbladet.se/rss.xml
+dn-senaste,nyhet,http://www.dn.se/m/rss/senaste-nytt
+dn-topp,nyhet,http://www.dn.se/nyheter/m/rss/
+svd-topp,nyhet,http://www.svd.se/?service=rss
