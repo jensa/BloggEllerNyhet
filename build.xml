@@ -7,6 +7,7 @@
   <path id="classpath">
     <pathelement path="${java.class.path}"/>
     <pathelement path="${classes.dir}"/>
+    <pathelement location="libs/commons-lang3-3.1.jar"/>
     <pathelement location="libs/jsoup-1.7.1.jar"/>
   </path>
 	
@@ -16,7 +17,7 @@
 
   <target name="compile" depends="init" description="compile the source">
       <javac srcdir="${src.dir}" destdir="${classes.dir}"
-        classpathref="classpath" encoding="utf8" includeantruntime="false">
+        classpathref="classpath" encoding="utf8" debug="true" includeantruntime="false">
 			<compilerarg value="-Xlint"/>
 			<classpath location="${classes.dir}" path="${java.class.path}" />
 		</javac>
