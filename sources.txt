@@ -1,5 +1,8 @@
 kenza,blogg,http://kenzas.se/author/kenza/feed/?paged=%page
-aftonbladet,nyhet,http://www.aftonbladet.se/rss.xml
-dn-senaste,nyhet,http://www.dn.se/m/rss/senaste-nytt
-dn-topp,nyhet,http://www.dn.se/nyheter/m/rss/
-svd-topp,nyhet,http://www.svd.se/?service=rss
+hugorosas,blogg,http://hugorosas.se/feed/?paged=%page
+gynning,blogg,http://gynning.net/feed/?paged=%page
+isabelles,blogg,http://werun.se/isabelles/feed/rss/?paged=%page
+aftonbladet,nyhet,http://www.aftonbladet.se/rss.xml,link,div#abBodyText
+dn-senaste,nyhet,http://www.dn.se/m/rss/senaste-nytt,link,div#contentBody
+dn-topp,nyhet,http://www.dn.se/nyheter/m/rss/,link,div#contentBody
+svd-topp,nyhet,http://www.svd.se/?service=rss,link,div.articletext
