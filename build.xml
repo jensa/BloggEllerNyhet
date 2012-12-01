@@ -9,6 +9,7 @@
     <pathelement path="${classes.dir}"/>
     <pathelement location="libs/commons-lang3-3.1.jar"/>
     <pathelement location="libs/jsoup-1.7.1.jar"/>
+    <pathelement location="libs/weka.jar"/>
   </path>
 	
 	<target name="run" depends="compile">
