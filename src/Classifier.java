@@ -11,7 +11,7 @@ import weka.filters.unsupervised.attribute.StringToWordVector;
 
 public class Classifier {
 	
-	public static final String sep = System.getProperty ("File.separator");
+	public static final String sep = System.getProperty ("file.separator");
 	
 	public static final String test = "data"+sep+"test";
 	public static final String train = "data"+sep+"train";

@@ -23,9 +23,6 @@ public class Crawler implements Runnable {
   public static final String BASE_OUTPUT_DIR = "data";
   public static final String DEFAULT_SOURCE_FILE = "sources.txt";
   
-  //public static final String TEST_OUTPUT = Classifier.test;
-  //public static final String TRAIN_OUTPUT = Classifier.train;
-  
   /** Number of pages to crawl for source URLs containing the %page variable */
   public static final int NUM_PAGES = 10;
 
