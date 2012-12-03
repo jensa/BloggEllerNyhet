@@ -4,14 +4,13 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.LineNumberReader;
-import java.lang.IllegalArgumentException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
-import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.Vector;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.jsoup.*;
 import org.jsoup.nodes.*;
@@ -26,12 +25,15 @@ public class Crawler {
   //public static final String TEST_OUTPUT = Classifier.test;
   //public static final String TRAIN_OUTPUT = Classifier.train;
   
+  /** Number of pages to crawl for source URLs containing the %page variable */
   public static final int NUM_PAGES = 10;
 
+  /** Format of dates read from RSS pubDate tags */
   public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.ENGLISH);
+  /** Format of output files (uses the parsed pubDate date) */
   public static final SimpleDateFormat ID_FORMAT = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
 
-  public static void main (String [] args) throws Exception {
+  public static void main(String [] args) throws Exception {
     LineNumberReader lnr = null;
     
     // Crawl URLs listed in sources file
@@ -42,16 +44,10 @@ public class Crawler {
       // Parse and process each line
       while ((line = lnr.readLine()) != null) {
         try {
-          List<String> params = parseCSVLine(line);
-          if (params.size() < 3)
-            throw new IllegalArgumentException("Invalid number of arguments (should be 3).");
-
-          new Crawler(params.get(0), params.get(1), params.get(2));
-        } catch(IllegalArgumentException e) {
-          System.err.println("Could not parse line " + lnr.getLineNumber() +
-              ": " + e.getMessage());
+          String[] params = parseCSVLine(line).toArray(new String[5]);
+          new Crawler(params);
         } catch (Exception e) {
-          System.err.println("Error on line" + lnr.getLineNumber() + ": " +
+          System.err.println("Error on line " + lnr.getLineNumber() + ": " +
               e.getMessage());
         }
       }
@@ -65,9 +61,43 @@ public class Crawler {
     }
   }
 
+  /** Base directory for data crawled in this instance */
   public String outputDir;
+  /** CSS selector for element containing the body text for each item */
+  protected String contentTag = "content, content|encoded";
+  /** CSS selector for the body text if present in an external HTML document */
+  protected String externalSelector = null;
 
-  public Crawler(String name, String cls, String url) throws Exception {
+  /**
+   * Required arguments:
+   *   name: Unique name for crawled site
+   *   class: Classification of content
+   *   url: URL to feed
+   * Optional arguments:
+   *   contentTag: CSS selector / tag name of element containing the body text
+   *   externalSelector: Will consider contentTag text as an URL, fetch that URL
+   *     and use the text in the element matching a CSS selector (this string)
+   *     as the body text
+   */
+  public Crawler(String... args) throws Exception {
+    if (args.length < 3)
+      throw new IllegalArgumentException("name, class and url are required, only " +
+          args.length + " arguments provided.");
+    
+    String name = args[0];
+    String cls = args[1];
+    String url = args[2];
+    if (args.length >= 3 && args[3] != null)
+      this.contentTag = args[3];
+    if (args.length >= 4 && args[4] != null)
+      this.externalSelector = args[4];
+
+    System.out.printf("Fetching %s/%s:\n", cls, name);
+    /*
+    if (externalSelector != null)
+      System.out.printf("Operating through external pages: %s -> %s\n", contentTag, externalSelector);
+    */
+
     this.outputDir = BASE_OUTPUT_DIR + DIR_SEP + cls + DIR_SEP + name;
     (new File(this.outputDir)).mkdirs();
 
@@ -80,44 +110,73 @@ public class Crawler {
     }
   }
 
+  /**
+   * Crawls and saves the RSS feed located in a specified URL.
+   * Handles links to external pages if configured.
+   */
   protected boolean crawlFeed(String url) {
     try {
       System.out.println("Crawling " + url);
-      Document doc = Jsoup.connect(url).get();
+      Document doc = fetchDocument(url);
 
       Elements items = doc.getElementsByTag("item");
       for (Element item : items) {
         String id = idFromPubDate(item.getElementsByTag("pubDate").first().text());
-        Elements contents = item.select("content|encoded, content");
+        Elements contents = item.select(this.contentTag);
 
         if (contents.size() > 0) {
           String data = cleanString(contents.first().text());
+
+          // Is this a external link which we need to crawl?
+          if (this.externalSelector != null) {
+            System.out.println("\tExternal: " + data);
+            doc = fetchDocument(data);
+            contents = doc.select(this.externalSelector);
+            if (contents.size() > 0) {
+              data = cleanString(contents.first().text());
+            } else {
+              System.err.println("\t" + id + ": No element matching external selector");
+            }
+          }
+
           saveData(id, data);
         } else {
-          System.err.println(id + ": No content tag found, skipping");
+          System.err.println("\t" + id + ": Missing content tag");
         }
       }
 
       return true;
-    } catch(IOException e) {}
+    } catch(IOException e) {
+      System.err.println("\tError occurred during crawling: " + e.getMessage());
+    }
     return false;
   }
 
-  protected void saveData(String id, String data) throws IOException {
+  /**
+   * Saves the crawled body text to the outputDir using the id as the basis for
+   * the file name.
+   */
+  protected void saveData(String id, String text) throws IOException {
     String path = this.outputDir + DIR_SEP + id + ".txt";
-    System.out.println(path);
+    System.out.println("\t> " + path);
 
     BufferedWriter bw = new BufferedWriter(new FileWriter(path));
-    bw.write(data);
+    bw.write(text);
     bw.close();
   }
 
+  /**
+   * Cleans a unsafe string, removing HTML tags and unescaping any entities present.
+   */
   protected String cleanString(String unsafe) {
     unsafe = Jsoup.clean(unsafe, Whitelist.none());
     unsafe = unsafe.replaceAll("&nbsp;", " ");
     return StringEscapeUtils.unescapeHtml4(unsafe);
   }
 
+  /**
+   * Generates a ID used for file names based on the date data present in the string.
+   */
   protected String idFromPubDate(String string) {
     try {
       return ID_FORMAT.format(DATE_FORMAT.parse(string));
@@ -126,6 +185,9 @@ public class Crawler {
     }
   }
 
+  /**
+   * Parses a line as a comma-separated CSV string and returns the column data.
+   */
   protected static List<String> parseCSVLine(String line) throws Exception {
     if (line==null)
       return null;
@@ -157,5 +219,13 @@ public class Crawler {
 
     store.add(curVal.toString());
     return store;
+  }
+
+  /**
+   * Uses Jsoup to retrieve a HTML/XML document from the specified URL.
+   */
+  protected Document fetchDocument(String url) throws IOException {
+    // Ignore content type in case the server decides to return something odd
+    return Jsoup.connect(url).ignoreContentType(true).get();
   }
 }
