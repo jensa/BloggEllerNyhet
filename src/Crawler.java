@@ -4,6 +4,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.LineNumberReader;
+import java.lang.Thread;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -45,7 +46,7 @@ public class Crawler implements Runnable {
       while ((line = lnr.readLine()) != null) {
         try {
           String[] params = parseCSVLine(line).toArray(new String[5]);
-          (new Crawler(params)).run();
+          new Thread(new Crawler(params)).start();
         } catch (Exception e) {
           System.err.println("Error on line " + lnr.getLineNumber() + ": " +
               e.getMessage());
@@ -63,6 +64,8 @@ public class Crawler implements Runnable {
 
   /** Target URL to crawl */
   public String url;
+  /** Classification of this URL */
+  public String cls;
   /** Name for this crawling instance (used when generating file names) */
   public String outputName;
   /** Base directory for data crawled in this instance */
@@ -89,20 +92,20 @@ public class Crawler implements Runnable {
           args.length + " arguments provided.");
     
     this.outputName = args[0];
-    String cls = args[1];
+    this.cls = args[1];
     this.url = args[2];
     if (args.length >= 3 && args[3] != null)
       this.contentTag = args[3];
     if (args.length >= 4 && args[4] != null)
       this.externalSelector = args[4];
 
-    System.out.printf("Fetching %s/%s:\n", cls, this.outputName);
-
     this.outputDir = BASE_OUTPUT_DIR + DIR_SEP + cls;
     (new File(this.outputDir)).mkdirs();
   }
 
   public void run() {
+    System.out.printf("Fetching %s/%s:\n", cls, this.outputName);
+
     // Parameterized url (contains variables)?
     if (url.contains("%page")) {
       for (int page = 1; page <= NUM_PAGES; ++page)
@@ -127,17 +130,16 @@ public class Crawler implements Runnable {
         Elements contents = item.select(this.contentTag);
 
         if (contents.size() > 0) {
-          String data = cleanString(contents.first().text());
+          String data = contents.first().text();
 
           // Is this a external link which we need to crawl?
           if (this.externalSelector != null) {
-            System.out.println("\tExternal: " + data);
             doc = fetchDocument(data);
             contents = doc.select(this.externalSelector);
             if (contents.size() > 0) {
-              data = cleanString(contents.first().text());
+              data = contents.first().text();
             } else {
-              System.err.println("\t" + id + ": No element matching external selector");
+              printError(data + " - no element matching external selector");
               data = null;
             }
           }
@@ -145,13 +147,13 @@ public class Crawler implements Runnable {
           if (data != null)
             saveData(id, data);
         } else {
-          System.err.println("\t" + id + ": Missing content tag");
+          printError(id + " - missing content tag");
         }
       }
 
       return true;
     } catch(IOException e) {
-      System.err.println("\tError occurred during crawling: " + e.getMessage());
+      printError("Error during crawling: " + e.getMessage());
     }
     return false;
   }
@@ -162,10 +164,10 @@ public class Crawler implements Runnable {
    */
   protected void saveData(String id, String text) throws IOException {
     String path = this.outputDir + DIR_SEP + this.outputName + "_" + id + ".txt";
-    System.out.println("\t> " + path);
+    System.out.println("> " + path);
 
     BufferedWriter bw = new BufferedWriter(new FileWriter(path));
-    bw.write(text);
+    bw.write(cleanString(text));
     bw.close();
   }
 
@@ -175,7 +177,7 @@ public class Crawler implements Runnable {
   protected String cleanString(String unsafe) {
     unsafe = Jsoup.clean(unsafe, Whitelist.none());
     unsafe = unsafe.replaceAll("&nbsp;", " ");
-    //unsafe = unsafe.replaceAll("[\\x94\\x92\\x091\\x85]", " ");
+    unsafe = unsafe.replaceAll("[\\x94\\x92\\x091\\x85]", " ");
     return StringEscapeUtils.unescapeHtml4(unsafe);
   }
 
@@ -185,7 +187,7 @@ public class Crawler implements Runnable {
   protected String idFromPubDate(String string) {
     try {
       return ID_FORMAT.format(DATE_FORMAT.parse(string));
-    } catch(ParseException e) {
+    } catch(Exception e) {
       return "unknown";
     }
   }
@@ -232,5 +234,9 @@ public class Crawler implements Runnable {
   protected Document fetchDocument(String url) throws IOException {
     // Ignore content type in case the server decides to return something odd
     return Jsoup.connect(url).ignoreContentType(true).get();
+  }
+
+  protected void printError(String msg) {
+    System.err.println(cls+"/"+outputName+": "+msg);
   }
 }
