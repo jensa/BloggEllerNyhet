@@ -17,7 +17,7 @@ import org.jsoup.nodes.*;
 import org.jsoup.safety.*;
 import org.jsoup.select.*;
 
-public class Crawler {
+public class Crawler implements Runnable {
   public static final String DIR_SEP = System.getProperty("file.separator");
   public static final String BASE_OUTPUT_DIR = "data";
   public static final String DEFAULT_SOURCE_FILE = "sources.txt";
@@ -45,7 +45,7 @@ public class Crawler {
       while ((line = lnr.readLine()) != null) {
         try {
           String[] params = parseCSVLine(line).toArray(new String[5]);
-          new Crawler(params);
+          (new Crawler(params)).run();
         } catch (Exception e) {
           System.err.println("Error on line " + lnr.getLineNumber() + ": " +
               e.getMessage());
@@ -61,6 +61,8 @@ public class Crawler {
     }
   }
 
+  /** Target URL to crawl */
+  public String url;
   /** Name for this crawling instance (used when generating file names) */
   public String outputName;
   /** Base directory for data crawled in this instance */
@@ -88,21 +90,19 @@ public class Crawler {
     
     this.outputName = args[0];
     String cls = args[1];
-    String url = args[2];
+    this.url = args[2];
     if (args.length >= 3 && args[3] != null)
       this.contentTag = args[3];
     if (args.length >= 4 && args[4] != null)
       this.externalSelector = args[4];
 
     System.out.printf("Fetching %s/%s:\n", cls, this.outputName);
-    /*
-    if (externalSelector != null)
-      System.out.printf("Operating through external pages: %s -> %s\n", contentTag, externalSelector);
-    */
 
     this.outputDir = BASE_OUTPUT_DIR + DIR_SEP + cls;
     (new File(this.outputDir)).mkdirs();
+  }
 
+  public void run() {
     // Parameterized url (contains variables)?
     if (url.contains("%page")) {
       for (int page = 1; page <= NUM_PAGES; ++page)
@@ -138,10 +138,12 @@ public class Crawler {
               data = cleanString(contents.first().text());
             } else {
               System.err.println("\t" + id + ": No element matching external selector");
+              data = null;
             }
           }
 
-          saveData(id, data);
+          if (data != null)
+            saveData(id, data);
         } else {
           System.err.println("\t" + id + ": Missing content tag");
         }
@@ -159,7 +161,7 @@ public class Crawler {
    * the file name.
    */
   protected void saveData(String id, String text) throws IOException {
-    String path = this.outputDir + DIR_SEP + this.outputName + "_" id + ".txt";
+    String path = this.outputDir + DIR_SEP + this.outputName + "_" + id + ".txt";
     System.out.println("\t> " + path);
 
     BufferedWriter bw = new BufferedWriter(new FileWriter(path));
@@ -173,7 +175,7 @@ public class Crawler {
   protected String cleanString(String unsafe) {
     unsafe = Jsoup.clean(unsafe, Whitelist.none());
     unsafe = unsafe.replaceAll("&nbsp;", " ");
-    unsafe = unsafe.replaceAll("[\\x94\\x92\\x091\\x85]", " ");
+    //unsafe = unsafe.replaceAll("[\\x94\\x92\\x091\\x85]", " ");
     return StringEscapeUtils.unescapeHtml4(unsafe);
   }
 
