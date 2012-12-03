@@ -61,6 +61,8 @@ public class Crawler {
     }
   }
 
+  /** Name for this crawling instance (used when generating file names) */
+  public String outputName;
   /** Base directory for data crawled in this instance */
   public String outputDir;
   /** CSS selector for element containing the body text for each item */
@@ -84,7 +86,7 @@ public class Crawler {
       throw new IllegalArgumentException("name, class and url are required, only " +
           args.length + " arguments provided.");
     
-    String name = args[0];
+    this.outputName = args[0];
     String cls = args[1];
     String url = args[2];
     if (args.length >= 3 && args[3] != null)
@@ -92,13 +94,13 @@ public class Crawler {
     if (args.length >= 4 && args[4] != null)
       this.externalSelector = args[4];
 
-    System.out.printf("Fetching %s/%s:\n", cls, name);
+    System.out.printf("Fetching %s/%s:\n", cls, this.outputName);
     /*
     if (externalSelector != null)
       System.out.printf("Operating through external pages: %s -> %s\n", contentTag, externalSelector);
     */
 
-    this.outputDir = BASE_OUTPUT_DIR + DIR_SEP + cls + DIR_SEP + name;
+    this.outputDir = BASE_OUTPUT_DIR + DIR_SEP + cls;
     (new File(this.outputDir)).mkdirs();
 
     // Parameterized url (contains variables)?
@@ -157,7 +159,7 @@ public class Crawler {
    * the file name.
    */
   protected void saveData(String id, String text) throws IOException {
-    String path = this.outputDir + DIR_SEP + id + ".txt";
+    String path = this.outputDir + DIR_SEP + this.outputName + "_" id + ".txt";
     System.out.println("\t> " + path);
 
     BufferedWriter bw = new BufferedWriter(new FileWriter(path));
@@ -171,6 +173,7 @@ public class Crawler {
   protected String cleanString(String unsafe) {
     unsafe = Jsoup.clean(unsafe, Whitelist.none());
     unsafe = unsafe.replaceAll("&nbsp;", " ");
+    unsafe = unsafe.replaceAll("[\\x94\\x92\\x091\\x85]", " ");
     return StringEscapeUtils.unescapeHtml4(unsafe);
   }
 
@@ -181,7 +184,7 @@ public class Crawler {
     try {
       return ID_FORMAT.format(DATE_FORMAT.parse(string));
     } catch(ParseException e) {
-      return "unknown-id";
+      return "unknown";
     }
   }
 
