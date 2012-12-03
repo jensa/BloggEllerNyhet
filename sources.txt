@@ -6,3 +6,4 @@ gynning,blogg,http://gynning.net/feed/?paged=%page
 isabelles,blogg,http://werun.se/isabelles/feed/rss/?paged=%page
 dn-senaste,nyhet,http://www.dn.se/m/rss/senaste-nytt,guid,div#contentBody
 dn-topp,nyhet,http://www.dn.se/nyheter/m/rss/,guid,div#contentBody
+expressen,nyhet,http://www.expressen.se/rss/nyheter,guid,div.b-text_article
