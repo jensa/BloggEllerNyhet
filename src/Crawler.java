@@ -5,12 +5,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.lang.Thread;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.Vector;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.jsoup.*;
@@ -71,6 +68,8 @@ public class Crawler implements Runnable {
   protected String contentTag = "content, content|encoded";
   /** CSS selector for the body text if present in an external HTML document */
   protected String externalSelector = null;
+  /** Unknown id counter */
+  protected int unknownCount = 0;
 
   /**
    * Required arguments:
@@ -123,7 +122,7 @@ public class Crawler implements Runnable {
 
       Elements items = doc.getElementsByTag("item");
       for (Element item : items) {
-        String id = idFromPubDate(item.getElementsByTag("pubDate").first().text());
+        String id = idForItem(item);
         Elements contents = item.select(this.contentTag);
 
         if (contents.size() > 0) {
@@ -179,13 +178,14 @@ public class Crawler implements Runnable {
   }
 
   /**
-   * Generates a ID used for file names based on the date data present in the string.
+   * Generates a ID used for file names based on the pubdate for the item.
    */
-  protected String idFromPubDate(String string) {
+  protected String idForItem(Element el) {
     try {
-      return ID_FORMAT.format(DATE_FORMAT.parse(string));
+      String date = el.getElementsByTag("pubDate").first().text();
+      return ID_FORMAT.format(DATE_FORMAT.parse(date));
     } catch(Exception e) {
-      return "unknown";
+      return "unknown-" + (++unknownCount);
     }
   }
 
