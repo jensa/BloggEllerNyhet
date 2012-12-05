@@ -1,0 +1,40 @@
+=== Run information ===
+
+Scheme:weka.classifiers.functions.VotedPerceptron -I 1 -E 1.0 -S 1 -M 10000
+Relation:     _home_mogel_Dropbox_sprakt_BloggEllerNyhet_data-split_test-weka.filters.unsupervised.attribute.StringToWordVector-R1-W1000-prune-rate-1.0-N1-stemmerweka.core.stemmers.NullStemmer-M2-tokenizerweka.core.tokenizers.WordTokenizer -delimiters " \r\n\t.,;:\'\"()?!"
+Instances:    254
+Attributes:   1933
+[list of attributes omitted]
+Test mode:evaluate on training data
+
+=== Classifier model (full training set) ===
+
+VotedPerceptron: Number of perceptrons=17
+
+Time taken to build model: 0.11 seconds
+
+=== Evaluation on training set ===
+=== Summary ===
+
+Correctly Classified Instances         250               98.4252 %
+Incorrectly Classified Instances         4                1.5748 %
+Kappa statistic                          0.9685
+Mean absolute error                      0.0157
+Root mean squared error                  0.1255
+Relative absolute error                  3.1496 %
+Root relative squared error             25.0982 %
+Total Number of Instances              254     
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 0.992     0.024      0.977     0.992     0.984      0.984    blogg
+                 0.976     0.008      0.992     0.976     0.984      0.995    nyhet
+Weighted Avg.    0.984     0.016      0.984     0.984     0.984      0.99 
+
+=== Confusion Matrix ===
+
+   a   b   <-- classified as
+ 126   1 |   a = blogg
+   3 124 |   b = nyhet
+

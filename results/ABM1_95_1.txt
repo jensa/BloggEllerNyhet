@@ -1,0 +1,273 @@
+=== Run information ===
+
+Scheme:weka.classifiers.meta.AdaBoostM1 -P 100 -S 1 -I 10 -W weka.classifiers.trees.DecisionStump
+Relation:     _home_mogel_Dropbox_sprakt_BloggEllerNyhet_data-weka.filters.unsupervised.attribute.StringToWordVector-R1-W1000-prune-rate-1.0-N1-stemmerweka.core.stemmers.NullStemmer-M2-tokenizerweka.core.tokenizers.WordTokenizer -delimiters " \r\n\t.,;:\'\"()?!"
+Instances:    744
+Attributes:   1690
+[list of attributes omitted]
+Test mode:split 50.0% train, remainder test
+
+=== Classifier model (full training set) ===
+
+AdaBoostM1: Base classifiers and their weights: 
+
+Decision Stump
+
+Classifications
+
+Annons <= 0.18562661159487792 : blogg
+Annons > 0.18562661159487792 : nyhet
+Annons is missing : blogg
+
+Class distributions
+
+Annons <= 0.18562661159487792
+blogg	nyhet	
+0.8242320819112628	0.1757679180887372	
+Annons > 0.18562661159487792
+blogg	nyhet	
+0.0	1.0	
+Annons is missing
+blogg	nyhet	
+0.6491935483870968	0.35080645161290325	
+
+
+Weight: 1.83
+
+Decision Stump
+
+Classifications
+
+jag <= 0.700955051275779 : nyhet
+jag > 0.700955051275779 : blogg
+jag is missing : nyhet
+
+Class distributions
+
+jag <= 0.700955051275779
+blogg	nyhet	
+0.18950943078831747	0.8104905692116824	
+jag > 0.700955051275779
+blogg	nyhet	
+0.858984078847613	0.14101592115238695	
+jag is missing
+blogg	nyhet	
+0.3767550702028097	0.6232449297971904	
+
+
+Weight: 1.54
+
+Decision Stump
+
+Classifications
+
+– <= 0.3458029902482798 : blogg
+– > 0.3458029902482798 : nyhet
+– is missing : blogg
+
+Class distributions
+
+– <= 0.3458029902482798
+blogg	nyhet	
+0.7375606349244779	0.2624393650755222	
+– > 0.3458029902482798
+blogg	nyhet	
+0.03851706236025646	0.9614829376397436	
+– is missing
+blogg	nyhet	
+0.5336910710485899	0.46630892895141	
+
+
+Weight: 1.4
+
+Decision Stump
+
+Classifications
+
+av <= 0.4982794244837086 : blogg
+av > 0.4982794244837086 : nyhet
+av is missing : nyhet
+
+Class distributions
+
+av <= 0.4982794244837086
+blogg	nyhet	
+0.6176184013232371	0.38238159867676286	
+av > 0.4982794244837086
+blogg	nyhet	
+0.13137578633481567	0.8686242136651843	
+av is missing
+blogg	nyhet	
+0.35386183310652203	0.6461381668934779	
+
+
+Weight: 1.12
+
+Decision Stump
+
+Classifications
+
+ni <= 0.5665602350437436 : nyhet
+ni > 0.5665602350437436 : blogg
+ni is missing : nyhet
+
+Class distributions
+
+ni <= 0.5665602350437436
+blogg	nyhet	
+0.2576158821259858	0.7423841178740143	
+ni > 0.5665602350437436
+blogg	nyhet	
+1.0000000000000007	-8.440380829549846E-16	
+ni is missing
+blogg	nyhet	
+0.3321666738231411	0.6678333261768589	
+
+
+Weight: 1.2
+
+Decision Stump
+
+Classifications
+
+säger <= 0.3458029902482798 : blogg
+säger > 0.3458029902482798 : nyhet
+säger is missing : blogg
+
+Class distributions
+
+säger <= 0.3458029902482798
+blogg	nyhet	
+0.6820431788389939	0.31795682116100615	
+säger > 0.3458029902482798
+blogg	nyhet	
+0.07664921958081726	0.9233507804191827	
+säger is missing
+blogg	nyhet	
+0.5653564872815482	0.43464351271845175	
+
+
+Weight: 0.99
+
+Decision Stump
+
+Classifications
+
+så <= 0.7238192612997065 : nyhet
+så > 0.7238192612997065 : blogg
+så is missing : nyhet
+
+Class distributions
+
+så <= 0.7238192612997065
+blogg	nyhet	
+0.3157303160478571	0.6842696839521428	
+så > 0.7238192612997065
+blogg	nyhet	
+0.8909404859171036	0.1090595140828964	
+så is missing
+blogg	nyhet	
+0.40507299092342913	0.5949270090765708	
+
+
+Weight: 0.93
+
+Decision Stump
+
+Classifications
+
+Annons <= 0.18562661159487792 : blogg
+Annons > 0.18562661159487792 : nyhet
+Annons is missing : blogg
+
+Class distributions
+
+Annons <= 0.18562661159487792
+blogg	nyhet	
+0.6343736380283022	0.36562636197169773	
+Annons > 0.18562661159487792
+blogg	nyhet	
+-5.798098712572812E-15	1.0000000000000058	
+Annons is missing
+blogg	nyhet	
+0.5667242052227531	0.4332757947772469	
+
+
+Weight: 0.72
+
+Decision Stump
+
+Classifications
+
+I <= 0.3458029902482798 : blogg
+I > 0.3458029902482798 : nyhet
+I is missing : nyhet
+
+Class distributions
+
+I <= 0.3458029902482798
+blogg	nyhet	
+0.5284507856264005	0.4715492143735996	
+I > 0.3458029902482798
+blogg	nyhet	
+0.08183313392760798	0.9181668660723921	
+I is missing
+blogg	nyhet	
+0.42081568114279333	0.5791843188572067	
+
+
+Weight: 0.5
+
+Decision Stump
+
+Classifications
+
+haha <= 0.1601763786534019 : nyhet
+haha > 0.1601763786534019 : blogg
+haha is missing : nyhet
+
+Class distributions
+
+haha <= 0.1601763786534019
+blogg	nyhet	
+0.30857376538668346	0.6914262346133165	
+haha > 0.1601763786534019
+blogg	nyhet	
+0.9999999999999993	7.264392579826411E-16	
+haha is missing
+blogg	nyhet	
+0.3483425092266924	0.6516574907733076	
+
+
+Weight: 0.89
+
+Number of performed Iterations: 10
+
+
+Time taken to build model: 20.7 seconds
+
+=== Evaluation on test split ===
+=== Summary ===
+
+Correctly Classified Instances         354               95.1613 %
+Incorrectly Classified Instances        18                4.8387 %
+Kappa statistic                          0.894 
+Mean absolute error                      0.0782
+Root mean squared error                  0.1888
+Relative absolute error                 17.1617 %
+Root relative squared error             39.5342 %
+Total Number of Instances              372     
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 0.963     0.069      0.963     0.963     0.963      0.99     blogg
+                 0.931     0.037      0.931     0.931     0.931      0.99     nyhet
+Weighted Avg.    0.952     0.058      0.952     0.952     0.952      0.99 
+
+=== Confusion Matrix ===
+
+   a   b   <-- classified as
+ 232   9 |   a = blogg
+   9 122 |   b = nyhet
+
