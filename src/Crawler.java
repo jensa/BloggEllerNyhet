@@ -39,8 +39,11 @@ public class Crawler implements Runnable {
       // Parse and process each line
       while ((line = lnr.readLine()) != null) {
         try {
-          String[] params = parseCSVLine(line).toArray(new String[5]);
-          new Thread(new Crawler(params)).start();
+          // Ignore lines starting with a !
+          if (!line.startsWith("!")) {
+            String[] params = parseCSVLine(line).toArray(new String[5]);
+            new Thread(new Crawler(params)).start();
+          }
         } catch (Exception e) {
           System.err.println("Error on line " + lnr.getLineNumber() + ": " +
               e.getMessage());
