@@ -1,0 +1,39 @@
+=== Run information ===
+
+Scheme:weka.classifiers.bayes.NaiveBayes 
+Relation:     E__Dropbox_sprakt_BloggEllerNyhet_data_train-weka.filters.unsupervised.attribute.StringToWordVector-R1-W1000-prune-rate-1.0-N0-L-S-stemmerweka.core.stemmers.NullStemmer-M1-stopwordsE:\Dropbox\sprakt\BloggEllerNyhet\stopwords.txt-tokenizerweka.core.tokenizers.WordTokenizer -delimiters " \r\n\t.,;:\'\"()?!"
+Instances:    860
+Attributes:   1707
+[list of attributes omitted]
+Test mode:split 50.0% train, remainder test
+
+=== Evaluation on test split ===
+=== Summary ===
+
+Correctly Classified Instances         400               93.0233 %
+Incorrectly Classified Instances        30                6.9767 %
+Kappa statistic                          0.8565
+K&B Relative Info Score              36676.3669 %
+K&B Information Score                  364.9243 bits      0.8487 bits/instance
+Class complexity | order 0             424.4493 bits      0.9871 bits/instance
+Class complexity | scheme              988.8575 bits      2.2997 bits/instance
+Complexity improvement     (Sf)       -564.4082 bits     -1.3126 bits/instance
+Mean absolute error                      0.0687
+Root mean squared error                  0.2559
+Relative absolute error                 13.9156 %
+Root relative squared error             51.6483 %
+Total Number of Instances              430     
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 0.955     0.104      0.925     0.955     0.94       0.981    blogg
+                 0.896     0.045      0.937     0.896     0.916      0.98     nyhet
+Weighted Avg.    0.93      0.079      0.93      0.93      0.93       0.981
+
+=== Confusion Matrix ===
+
+   a   b   <-- classified as
+ 236  11 |   a = blogg
+  19 164 |   b = nyhet
+
