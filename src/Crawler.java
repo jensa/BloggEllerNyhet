@@ -17,8 +17,6 @@ import org.jsoup.select.*;
 
 public class Crawler implements Runnable {
   public static final String DIR_SEP = System.getProperty("file.separator");
-  public static final String BASE_OUTPUT_DIR = "data";
-  public static final String DEFAULT_SOURCE_FILE = "sources.txt";
   
   /** Number of pages to crawl for source URLs containing the %page variable */
   public static final int NUM_PAGES = 10;
@@ -28,12 +26,19 @@ public class Crawler implements Runnable {
   /** Format of output files (uses the parsed pubDate date) */
   public static final SimpleDateFormat ID_FORMAT = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
 
+  public static String baseOutputDir = "data";
+  public static String sourceFile = "sources.txt";
+
   public static void main(String [] args) throws Exception {
     LineNumberReader lnr = null;
     
     // Crawl URLs listed in sources file
     try {
-      lnr = new LineNumberReader(new FileReader(DEFAULT_SOURCE_FILE));
+      if (args.length > 0)
+        baseOutputDir = args[0];
+      if (args.length > 1)
+        sourceFile = args[1];
+      lnr = new LineNumberReader(new FileReader(sourceFile));
       String line;
 
       // Parse and process each line
@@ -50,7 +55,7 @@ public class Crawler implements Runnable {
         }
       }
     } catch(IOException e) {
-      System.err.println("Could not open source file for reading: " + DEFAULT_SOURCE_FILE);
+      System.err.println("Could not open source file for reading: " + sourceFile);
       System.exit(1);
     } finally {
       try {
@@ -98,8 +103,8 @@ public class Crawler implements Runnable {
     if (args.length >= 4 && args[4] != null)
       this.externalSelector = args[4];
 
-    this.outputDir = BASE_OUTPUT_DIR + DIR_SEP + cls;
-    (new File(this.outputDir)).mkdirs();
+    outputDir = baseOutputDir + DIR_SEP + cls;
+    (new File(outputDir)).mkdirs();
   }
 
   public void run() {
@@ -143,7 +148,7 @@ public class Crawler implements Runnable {
             }
           }
 
-          if (data != null)
+          if (data != null && data.trim().length() > 0)
             saveData(id, data);
         } else {
           printError(id + " - missing content tag");
